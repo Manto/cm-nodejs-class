@@ -5,3 +5,19 @@
 <p>
     {{now}}
 </p>
+
+<hr />
+
+<p>
+    Here is a list of polls:
+</p>
+
+<ul>
+    {{#if polls}}
+        {{#each polls}}
+            <li><a href="/polls/{{id}}">{{this.name}}</a></li>
+        {{/each}}    
+    {{else}}
+        No polls yet...
+    {{/if}}
+</ul>
