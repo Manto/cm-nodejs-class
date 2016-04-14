@@ -21,4 +21,28 @@
 	<input id="voteAgreePrediction" class="form-control" placeholder="e.g., 50">
 </div>
 
+<div id="voteAlert" class="alert alert-danger alert-dismissible hidden" role="alert">
+ </div>
+
 <button id="voteBtn" class="btn btn-primary">Vote</button>
+
+
+<script>
+$('#voteBtn').on('click', function(event) {
+	var voteChoice = parseInt($("#voteChoice").val());
+	var voteAgreePrediction = parseInt($("#voteAgreePrediction").val());
+
+	if (!voteAgreePrediction) {
+		$('#voteAlert').html('You must enter a prediction.');
+		$('#voteAlert').removeClass('hidden');
+		return;
+	}
+	$('#voteAlert').addClass('hidden');
+
+	console.log({
+		poll_id: '{{ _id }}',
+		vote_choice: parseInt(voteChoice),
+		agree_prediction: parseInt(voteAgreePrediction),	
+	});
+});
+</script>
