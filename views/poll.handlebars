@@ -7,3 +7,18 @@
 <p>
 	<img src="{{ image_url }}" />
 </p>
+
+<div class="form-group">
+    <label for="voteChoice">What do you think?</label>
+    <select id="voteChoice" class="form-control">
+        <option value="1">Yes!</option>
+        <option value="2">No!</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="voteAgreePrediction">What percentage of people will agree with you?</label>
+	<input id="voteAgreePrediction" class="form-control" placeholder="e.g., 50">
+</div>
+
+<button id="voteBtn" class="btn btn-primary">Vote</button>
