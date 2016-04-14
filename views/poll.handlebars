@@ -39,10 +39,17 @@ $('#voteBtn').on('click', function(event) {
 	}
 	$('#voteAlert').addClass('hidden');
 
-	console.log({
-		poll_id: '{{ _id }}',
-		vote_choice: parseInt(voteChoice),
-		agree_prediction: parseInt(voteAgreePrediction),	
+	var url = '/polls/{{_id}}/vote';
+	$.ajax({
+		method: "POST",
+		url: url,
+		data: {
+			vote_choice: voteChoice,
+			agree_prediction: voteAgreePrediction
+		}
+	})
+	.done(function(result) {
+		console.log(result);
 	});
 });
 </script>
