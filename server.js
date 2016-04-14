@@ -42,8 +42,22 @@ app.post('/polls/:poll_id/vote', function(req, res) {
   var collection = db.get('poll_votes');
   var poll_id = req.params.poll_id;
 
-  console.log(req.body);
-  return;
+  // get the submitted form values
+  var vote_choice = req.body.vote_choice;
+  var agree_prediction = req.body.agree_prediction;
+
+  collection.insert({
+    poll_id: mongo.ObjectId(poll_id),
+    vote_choice: vote_choice,
+    agree_prediction: agree_prediction
+  }, function(err, doc) {
+    if(err) {
+      res.send("There was an error: " + err);
+    }
+    else {
+      res.send("Vote submitted!");
+    }
+  });
 });
 
 
