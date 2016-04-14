@@ -1,6 +1,7 @@
 // Initialize express and handlebars packages
 var express = require("express");
 var exphbs  = require('express-handlebars');
+var bodyParser = require('body-parser')
 
 // Initialize the packages we need to access MongoDB
 var mongo = require('mongodb');
@@ -11,8 +12,9 @@ var app = express();
 
 app.engine('handlebars', exphbs({defaultLayout: 'base'}));
 app.set('view engine', 'handlebars');
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// Defining routes
+// Renders the webpage for viewing all of the polls
 app.get('/', function(req, res) {
    var collection = db.get('polls');
 
@@ -25,6 +27,7 @@ app.get('/', function(req, res) {
    });
 });
 
+// Renders the webpage for viewing a particular poll
 app.get('/polls/:poll_id', function(req, res) {
    var collection = db.get('polls');
    var poll_id = req.params.poll_id;
@@ -32,6 +35,15 @@ app.get('/polls/:poll_id', function(req, res) {
    collection.findById(poll_id,function(error,poll){
       res.render('poll', poll);
    });
+});
+
+// API for submitting a vote
+app.post('/polls/:poll_id/vote', function(req, res) {
+  var collection = db.get('poll_votes');
+  var poll_id = req.params.poll_id;
+
+  console.log(req.body);
+  return;
 });
 
 
