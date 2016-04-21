@@ -48,8 +48,8 @@ app.post('/polls/:poll_id/vote', function(req, res) {
 
   collection.insert({
     poll_id: mongo.ObjectId(poll_id),
-    vote_choice: vote_choice,
-    agree_prediction: agree_prediction
+    vote_choice: parseInt(vote_choice),
+    agree_prediction: parseInt(agree_prediction)
   }, function(err, doc) {
     if(err) {
       res.send("There was an error: " + err);

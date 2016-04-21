@@ -21,8 +21,10 @@
 	<input id="voteAgreePrediction" class="form-control" placeholder="e.g., 50">
 </div>
 
-<div id="voteAlert" class="alert alert-danger alert-dismissible hidden" role="alert">
+<div id="voteAlert" class="alert alert-danger hidden" role="alert">
  </div>
+
+<div id="voteMessage" class="alert alert-success hidden" role="alert">Vote submitted!</div>
 
 <button id="voteBtn" class="btn btn-primary">Vote</button>
 
@@ -49,6 +51,7 @@ $('#voteBtn').on('click', function(event) {
 		}
 	})
 	.done(function(result) {
+		$('#voteMessage').removeClass('hidden');
 		console.log(result);
 	});
 });
