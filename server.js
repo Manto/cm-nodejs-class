@@ -39,17 +39,20 @@ app.get('/polls/:poll_id', function(req, res) {
 
 // gets the vote results
 app.get('/polls/:poll_id/results', function(req, res) {
-  var collection = db.get('poll_votes');
+  var polls = db.get('polls');
+  var poll_votes = db.get('poll_votes');
   var poll_id = req.params.poll_id;
 
-  var result = {};
-  collection.count( { poll_id: mongo.ObjectId(poll_id) }, function(error, count) {
-    result['vote_count'] = count;
-    collection.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 1 }, function(error, count) {
-      result['yes_count'] = count;
-      collection.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 2 }, function(error, count) {
-        result['no_count'] = count;
-        res.send(result);
+  polls.findById(poll_id,function(error,poll){
+    poll_votes.count( { poll_id: mongo.ObjectId(poll_id) }, function(error, count) {
+      poll['vote_count'] = count;
+      poll_votes.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 1 }, function(error, count) {
+        poll['yes_count'] = count;
+        poll_votes.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 2 }, function(error, count) {
+          poll['no_count'] = count;
+          console.log(poll);
+          res.render('result', poll);
+        });
       });
     });
   });
