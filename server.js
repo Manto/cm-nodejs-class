@@ -10,7 +10,21 @@ var db = monk('localhost:27017/nodejs');
 
 var app = express();
 
-app.engine('handlebars', exphbs({defaultLayout: 'base'}));
+app.engine('handlebars', exphbs({
+  defaultLayout: 'base',
+  helpers: {
+    percentage: function(object) {
+      return Math.round(object * 1000) / 10 + "%";
+    },
+    uppercase: function(object) {
+      return object.toUpperCase();
+    },
+    base_url: function(object) {
+      return "http://127.0.0.1:5000";
+    }
+  }
+}));
+
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -63,6 +77,8 @@ app.get('/polls/:poll_id/results', function(req, res) {
             ] 
             , function(err, data) {
               poll['prediction_average'] = data[0]['average'];
+              poll['yes_percentage'] = poll['yes_count'] / poll['vote_count'];
+              poll['no_percentage'] = poll['no_count'] / poll['vote_count'];
               res.render('result', poll);
             }
           )

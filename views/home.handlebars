@@ -15,7 +15,7 @@
 <ul>
     {{#if polls}}
         {{#each polls}}
-            <li><a href="/polls/{{this._id}}">{{this.name}}</a></li>
+            <li><a href="{{ base_url }}/polls/{{this._id}}">{{this.name}}</a></li>
         {{/each}}    
     {{else}}
         No polls yet...
