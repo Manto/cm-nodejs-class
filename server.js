@@ -50,7 +50,6 @@ app.get('/polls/:poll_id/results', function(req, res) {
         poll['yes_count'] = count;
         poll_votes.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 2 }, function(error, count) {
           poll['no_count'] = count;
-          console.log(poll);
           res.render('result', poll);
         });
       });
@@ -60,23 +59,38 @@ app.get('/polls/:poll_id/results', function(req, res) {
 
 // API for submitting a vote
 app.post('/polls/:poll_id/vote', function(req, res) {
-  var collection = db.get('poll_votes');
+  var polls = db.get('polls');
+  var poll_votes = db.get('poll_votes');
   var poll_id = req.params.poll_id;
 
   // get the submitted form values
   var vote_choice = req.body.vote_choice;
   var agree_prediction = req.body.agree_prediction;
 
-  collection.insert({
+  poll_votes.insert({
     poll_id: mongo.ObjectId(poll_id),
     vote_choice: parseInt(vote_choice),
     agree_prediction: parseInt(agree_prediction)
   }, function(err, doc) {
-    if(err) {
+
+    if (err) {
       res.send("There was an error: " + err);
     }
     else {
-      res.send("Vote submitted!");
+      polls.update({
+        _id: mongo.ObjectId(poll_id)
+      }, {
+        $inc: {
+          vote_count_auto: 1
+        }
+      }, function(err, doc) {
+        if(err) {
+          res.send("There was an error: " + err);
+        }
+        else {
+          res.send("Vote submitted!");
+        }
+      });
     }
   });
 });
