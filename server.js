@@ -43,6 +43,7 @@ app.get('/polls/:poll_id/results', function(req, res) {
   var poll_votes = db.get('poll_votes');
   var poll_id = req.params.poll_id;
 
+
   polls.findById(poll_id,function(error,poll){
     poll_votes.count( { poll_id: mongo.ObjectId(poll_id) }, function(error, count) {
       poll['vote_count'] = count;
@@ -50,7 +51,21 @@ app.get('/polls/:poll_id/results', function(req, res) {
         poll['yes_count'] = count;
         poll_votes.count( { poll_id: mongo.ObjectId(poll_id), vote_choice: 2 }, function(error, count) {
           poll['no_count'] = count;
-          res.render('result', poll);
+          poll_votes.col.aggregate(
+            [
+              { "$match": {
+                "poll_id": mongo.ObjectId(poll_id)
+              }},
+              { "$group": {
+                "_id": null, 
+                "average": { $avg: "$agree_prediction" }
+              }}
+            ] 
+            , function(err, data) {
+              poll['prediction_average'] = data[0]['average'];
+              res.render('result', poll);
+            }
+          )
         });
       });
     });
